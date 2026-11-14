@@ -12,6 +12,11 @@ const updateCaseStatus = async (id, status) => {
     error.status = 404;
     throw error;
   }
+  if (status === 'APPROVED' && existingCase.assigned_employee_id == null) {
+    const error = new Error('cannot change status of unassigned case');
+    error.status = 409;
+    throw error;
+  }
   if (!['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
     const error = new Error('Invalid status');
     error.status = 400;
